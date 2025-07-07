@@ -14,24 +14,24 @@ class Processor:
         self.mode = mode
         self.input_name = self.input_file.split("/")[-1]
         self.output_name = f"output_{self.input_name}"
-        self.copy_file()
-    def copy_file(self):
-        try:
-            os.system(f"xrdcp root://cms-xrdr.sdfarm.kr:1094/{self.input_file} ./")
-        except:
-            self.error = True
-        if not os.path.exists(self.input_name):
-            self.error = True
+        #self.copy_file()
+    #def copy_file(self):
+    #    try:
+    #        os.system(f"xrdcp root://xrootd-cms.infn.it/{self.input_file} root://eosuser.cern.ch//eos/user/s/squinto/PTBINNEDCHECKS/")
+    #    except:
+    #        self.error = True
+    #    if not os.path.exists(self.input_name):
+    #        self.error = True
     def run_file(self):
         if self.error:
             return None
-        with uproot.open(self.input_name) as f:
+        with uproot.open(f"root://xrootd-cms.infn.it/{self.input_file}") as f:   # choose your preferred redirector
             events = f["Events"]
             pdgId = events["LHEPart_pdgId"].array()
             pt = events["LHEPart_pt"].array()
             eta = events["LHEPart_eta"].array()
             phi = events["LHEPart_phi"].array()
-            mass = events["LHEPart_mass"].array()
+            mass = events["LHEPart_mass"].array()  # saving mass for additional checks
             self.weight = np.sign(events["genWeight"].array())
 
         if self.mode == "W":
@@ -66,7 +66,7 @@ class Processor:
                 "weight": self.weight
             }
 
-        os.system(f"xrdcp {self.output_name} root://cmseos.fnal.gov//store/group/monojet/PTBINNEDCHECKS/{self.dataset}/{self.output_name} --force")
+        os.system(f"xrdcp {self.output_name} root://eosuser.cern.ch//eos/user/s/squinto/PTBINNEDCHECKS/{self.dataset}/{self.output_name} --force")  # change the path to the one you intend to use
         os.system(f"rm *.root")
 
 if __name__ == "__main__":

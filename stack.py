@@ -83,49 +83,66 @@ class Histogrammer:
         with open(f"{self.output}_ratio.json", "w") as f:
             json.dump(self.ratios, f, indent=4)
 
+# change everywhere to the correct path
 def draw_DY(gap):
     JETBINS = ["1J", "2J"]
-    PTBINS = ["100to200", "200to400", "400to600", "600"]
+    PTBINS = ["40to100", "100to200", "200to400", "400to600", "600"]
 
-    DYPTBINNED = [f"DYto2L-2Jets_Bin-{NJ}-MLL-50-PTLL-{PT}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS for PT in PTBINS]
     DYINCL = [f"DYto2L-2Jets_MLL-50_{NJ}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS]
+    DYPTBINNED = [f"DYto2L-2Jets_MLL-50_PTLL-{PT}_{NJ}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS for PT in PTBINS]
+    #DYPTBINNED = [f"DYto2L-2Jets_Bin-{NJ}-MLL-50-PTLL-{PT}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS for PT in PTBINS]
 
     hists = {
-        "DY PT Binned" : Stacker(f"npzs_{gap}", DYPTBINNED).get(),
-        "DY Inclusive" : Stacker(f"npzs_{gap}", DYINCL).get(),
+        "DY Inclusive" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}_XSDB", DYINCL).get(),
+        "DY PT Binned" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}_XSDB", DYPTBINNED).get(),
     }
-    Histogrammer(hists, f"npzs_{gap}__DY").get()
+    Histogrammer(hists, f"plots/npzs_{gap}_XSDB__DY").get()
+
+def draw_Z(gap):
+    JETBINS = ["1J", "2J"]
+    PTBINS = ["40to100", "100to200", "200to400", "400to600", "600"]
+
+    ZPTBINNED = [f"Zto2Nu-2Jets_Bin-PTNuNu-{PT}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for PT in PTBINS[1:]]
+    ZPTNJBINNED = [f"Zto2Nu-2Jets_PTNuNu-{PT}_{NJ}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS for PT in PTBINS]
+    ZINCL = [f"Zto2Nu-2Jets_Bin-PTNuNu-200_TuneCP5_13p6TeV_amcatnloFXFX-pythia8"]
+
+    hists = {
+        #"Z Inclusive" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", ZINCL).get(),
+        "Z PT Binned" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", ZPTBINNED).get(),
+        "Z PT NJ Binned" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", ZPTNJBINNED).get(),
+    }
+    Histogrammer(hists, f"npzs_{gap}_Z_Binned_ratio").get()
 
 def draw_W(gap):
-    JETBINS = ["1J", "2J"]
-    PTBINS = ["100to200", "200to400", "400to600", "600"]
+    JETBINS = ["0J", "1J", "2J"]
+    PTBINS = ["40to100", "100to200", "200to400", "400to600", "600"]
 
-    WPTBINNED = [f"WtoLNu-2Jets_Bin-{NJ}-PTLNu-{PT}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS for PT in PTBINS]
     WINCL = [f"WtoLNu-2Jets_{NJ}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS]
+    WPTBINNED = [f"WtoLNu-2Jets_PTLNu-{PT}_{NJ}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for NJ in JETBINS[1:] for PT in PTBINS]
+    WPTBINNED2 = [f"WtoLNu-2Jets_Bin-PTLNu-{PT}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for PT in PTBINS[1:]]
 
     hists = {
-        "W PT Binned" : Stacker(f"npzs_{gap}", WPTBINNED).get(),
-        "W Inclusive" : Stacker(f"npzs_{gap}", WINCL).get(),
+        "W Inclusive" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", WINCL).get(),
+        "W PT Binned" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", WPTBINNED).get(),
+        "W PT Binned 2" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", WPTBINNED2).get(),
     }
-    Histogrammer(hists, f"npzs_{gap}__W").get()
+    Histogrammer(hists, f"plots/npzs_{gap}__W").get()
 
 def draw_Gamma(gap):
-    PTBINS = ["100to200", "200to400", "400to600", "600"]
+    PTBINS = ["10to100", "100to200", "200to400", "400to600", "600"]
 
-    GPTBINNED = [f"GJ_Bin-PTG-{PT}_TuneCP5_13p6TeV_amcatnlo-pythia8" for PT in PTBINS]
-    #GINCL = ["GJ_Bin-PTG-130_TuneCP5_13p6TeV_amcatnlo-pythia8"]
-    GINCL = ["GJ_Bin-Merged_TuneCP5_13p6TeV_amcatnlo-pythia8"]
-
-    #GINCL2 = ["GJ_Bin-PTG-30_TuneCP5_13p6TeV_amcatnlo-pythia8"]
+    GINCL = ["DYGto2LG-1Jets_MLL-50_PTG-200_TuneCP5_13p6TeV_amcatnloFXFX-pythia8"]
+    GPTBINNED = [f"DYGto2LG-1Jets_MLL-50_PTG-{PT}_TuneCP5_13p6TeV_amcatnloFXFX-pythia8" for PT in PTBINS]
 
     hists = {
-        "Gamma PT Binned" : Stacker(f"npzs_{gap}", GPTBINNED).get(),
-        "Gamma Inclusive" : Stacker(f"npzs_{gap}", GINCL).get(),
+        "Gamma Inclusive" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", GINCL).get(),
+        "Gamma PT Binned" : Stacker(f"/eos/user/s/squinto/PTBINNEDCHECKS/npzs_{gap}", GPTBINNED).get(),
     }
-    Histogrammer(hists, f"npzs_{gap}__Gamma").get()
+    Histogrammer(hists, f"plots/npzs_{gap}__Gamma").get()
 
 def main():
     for gap in [10, 20, 50]:
+        draw_Z(gap)
         draw_DY(gap)
         draw_W(gap)
         draw_Gamma(gap)

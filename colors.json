@@ -1,6 +1,10 @@
 {
 "DY PT Binned" : "orangered",
 "DY Inclusive" : "royalblue",
+"Z PT Binned" : "orangered",
+"Z PT NJ Binned" : "limegreen",
+"Z Inclusive" : "royalblue",
+"W PT Binned 2" : "limegreen",
 "W PT Binned" : "orangered",
 "W Inclusive" : "royalblue",
 "Gamma PT Binned" : "orangered",
